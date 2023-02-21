@@ -4,8 +4,8 @@ const conn = require('./config/db');
 
 app.use(express.json())
 
-app.get('/get-karyawan', function (req, res) {
-    const queryStr = "SELECT * FROM karyawan WHERE deleted_at IS NULL";
+app.get('/get-data', function (req, res) {
+    const queryStr = "SELECT * FROM data WHERE deleted_at IS NULL";
     conn.query(queryStr, (err, results)=>{
         if (err){
             console.log(err);
@@ -20,14 +20,14 @@ app.get('/get-karyawan', function (req, res) {
     });
 });
 
-app.post('/store-karyawan', function (req, res){
+app.post('/store-data', function (req, res){
     console.log(req.body);
     const param = req.body;
     const username = param.username;
     const password = param.password;
     const now = new Date();
 
-    const queryStr = "INSERT INTO karyawan (username, password, created_at) VALUES (?, ?, ?)";
+    const queryStr = "INSERT INTO data (username, password, created_at) VALUES (?, ?, ?)";
     const values = [username, password, now];
 
     conn.query(queryStr, values, (err, results)=>{
@@ -48,10 +48,10 @@ app.post('/store-karyawan', function (req, res){
     })
 });
 
-app.get('/get-karyawan-by-id', function (req, res) {
+app.get('/get-data-by-id', function (req, res) {
     const param= req.query
     const id = param.id
-    const queryStr = "SELECT * FROM karyawan WHERE deleted_at IS NULL AND id= ?";
+    const queryStr = "SELECT * FROM data WHERE deleted_at IS NULL AND id= ?";
     const values = [id];
 
     conn.query(queryStr, values, (err, results) => {
@@ -72,14 +72,15 @@ app.get('/get-karyawan-by-id', function (req, res) {
     })
 });
 
-app.post('/update-karyawan', function(req, res){
+app.post('/update-data', function(req, res){
     const param = req.body;
     const id = param.id;
+    const Nama = param.Nama;
     const username = param.username;
     const password = param.password;
 
-    const queryStr = "UPDATE karyawan SET username = ?, password = ? WHERE id = ? AND deleted_at IS NULL";
-    const values = [username, password, id];
+    const queryStr = "UPDATE data SET Nama = ?, username = ?, password = ? WHERE id = ? AND deleted_at IS NULL";
+    const values = [Nama, username, password, id];
 
     conn.query(queryStr, values, (err, results) => {
         if (err) {
@@ -99,12 +100,12 @@ app.post('/update-karyawan', function(req, res){
     })
 })
 
- app.post('/delete-karyawan', function (req, res){
+ app.post('/delete-data', function (req, res){
     const param = req.body;
     const id = param.id;
     const now = new Date();
 
-    queryStr = "UPDATE karyawan SET deleted_at = ? WHERE id = ?";
+    queryStr = "UPDATE data SET deleted_at = ? WHERE id = ?";
     const values = [now, id];
 
     conn.query(queryStr, values, (err,results)=>{
@@ -131,7 +132,7 @@ app.post('/update-karyawan', function(req, res){
     const username = param.username;
     const password = param.password;
 
-    const queryStr = "SELECT id, username, password FROM karyawan WHERE username = ? AND password = ? AND deleted_at IS NULL";
+    const queryStr = "SELECT id, username, password FROM data WHERE username = ? AND password = ? AND deleted_at IS NULL";
     const values = [username, password];
 
     conn.query(queryStr, values, (err, results)=>{
@@ -163,12 +164,13 @@ app.post('/update-karyawan', function(req, res){
  app.post('/register', function (req, res) {
     console.log(req.body);
     const param = req.body;
+    const Nama = param.Nama;
     const username = param.username;
     const password = param.password;
     const now = new Date();
 
     // Check if username already exists
-    const checkQuery = "SELECT COUNT(*) as count FROM karyawan WHERE username = ?";
+    const checkQuery = "SELECT COUNT(*) as count FROM data WHERE username = ?";
     const checkValues = [username];
 
     conn.query(checkQuery, checkValues, (checkErr, checkResults) => {
@@ -191,8 +193,8 @@ app.post('/update-karyawan', function(req, res){
                 });
             } else {
                 // If username does not exist, insert new data
-                const insertQuery = "INSERT INTO karyawan (username, password, created_at) VALUES (?, ?, ?)";
-                const insertValues = [username, password, now];
+                const insertQuery = "INSERT INTO data (Nama, username, password, created_at) VALUES (?, ?, ?, ?)";
+                const insertValues = [Nama, username, password, now];
 
                 conn.query(insertQuery, insertValues, (insertErr, insertResults) => {
                     if (insertErr) {
