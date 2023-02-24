@@ -101,7 +101,7 @@ app.post('/update-data', function(req, res){
 })
 
  app.post('/delete-data', function (req, res){
-    const param = req.body;
+    const param = req.query;
     const id = param.id;
     const now = new Date();
 
@@ -120,6 +120,32 @@ app.post('/update-data', function(req, res){
             res.status(200).json({
                 "success": true,
                 "message": "Sukses menghapus data",
+                "data": results
+            })
+        }
+    })
+ });
+
+ app.post('/delete/:id', function (req, res){
+    console.log(req.body);
+    const param = req.body;
+    const id = param.id;
+    const now = new Date();
+
+    const queryStr = "UPDATE data SET deleted_at = ? WHERE id = ?";
+    const values = [now, id];
+
+    conn.query(queryStr, values, (err, results)=>{
+        if(err){
+            console.log(err);
+            res.status(500).json({
+                "success": false,
+                "message": "Gagal menghapus data"
+            })
+        } else {
+            res.status(200).json({
+                "success": true,
+                "message": "Berhasil menghapus data",
                 "data": results
             })
         }
@@ -217,6 +243,35 @@ app.post('/update-data', function(req, res){
         }
     });
 });
+
+app.post('/tambah', function (req, res){
+    console.log(req.body);
+    const param = req.body;
+    const tindakan = param.tindakan
+    const pemeriksaan = param.pemeriksaan
+    const harga = param.harga
+    const now = new Date()
+
+    const queryStr = "INSERT INTO mapping (tindakan, pemeriksaan, harga, created_at) VALUES (?, ?, ?, ?)";
+    const values = [tindakan, pemeriksaan, harga, now];
+
+    conn.query(queryStr, values, (err, results)=>{
+        if(err){
+            console.log(err);
+            res.status(500).json({
+                "success": false,
+                "message": err.sqlMessage,
+                "data": null
+            })
+        } else {
+            res.status(200).json({
+                "success": true,
+                "message": "Berhasil menyimpan data",
+                "data": results
+            })
+        }
+    })
+})
 
 
 
