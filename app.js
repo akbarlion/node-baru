@@ -50,7 +50,7 @@ app.post('/store-data', function (req, res){
 
 app.get('/get-data-by-id', function (req, res) {
     const param= req.query
-    const id = param.id
+    const id = param.id;
     const queryStr = "SELECT * FROM data WHERE deleted_at IS NULL AND id= ?";
     const values = [id];
 
