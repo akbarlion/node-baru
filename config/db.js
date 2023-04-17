@@ -3,7 +3,7 @@ const conn = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "kantor",
+    database: "sim_cito_web",
     charset: "utf8mb4",
     timezone: "+07:00"
 });
